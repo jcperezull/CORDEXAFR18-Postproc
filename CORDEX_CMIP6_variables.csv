@@ -1,0 +1,203 @@
+output variable name,WRF variable,units,ag,long_name,standard_name,mon,day,6hr,3hr,1hr,Priority
+tas,T2,K,i,Near-Surface Air Temperature,air_temperature,x,x,,,x,CORE
+tasmax,T2,K,,Daily Maximum Near-Surface Air Temperature,air_temperature,x,x,,,,CORE
+tasmin,T2,K,,Daily Minimum Near-Surface Air Temperature,air_temperature,x,x,,,,CORE
+pr,-999,kg m-2 s-1,a,Precipitation,precipitation_flux,x,x,,,x,CORE
+evspsbl,QFX,kg m-2 s-1,a,Evaporation Including Sublimation and Transpiration,water_evapotranspiration_flux,x,x,,,x,CORE
+huss,Q2,1,i,Near-Surface Specific Humidity,specific_humidity,x,x,,,x,CORE
+hurs,-999,%,i,Near-Surface Relative Humidity,relative_humidity,x,x,,,x,CORE
+ps,PSFC,Pa,i,Surface Air Pressure,surface_air_pressure,x,x,,,x,CORE
+psl,-999,Pa,i,Sea Level Pressure,air_pressure_at_mean_sea_level,x,x,,,x,CORE
+sfcWind,-999,m s-1,i,Near-Surface Wind Speed,wind_speed,x,x,,,x,CORE
+uas,U10,m s-1,i,Eastward Near-Surface Wind,eastward_wind,x,x,,,x,CORE
+vas,V10,m s-1,i,Northward Near-Surface Wind,northward_wind,x,x,,,x,CORE
+clt,CLDFRA,%,a,Total Cloud Cover Percentage,cloud_area_fraction,x,x,,,x,CORE
+rsds,ACSWDNB,W m-2,a,Surface Downwelling Shortwave Radiation,surface_downwelling_shortwave_flux_in_air,x,x,,,x,CORE
+rlds,ACLWDNB,W m-2,a,Surface Downwelling Longwave Radiation,surface_downwelling_longwave_flux_in_air,x,x,,,x,CORE
+orog,HGT,m,,Surface Altitude,surface_altitude,,,,,,CORE
+sftlf,XLAND,%,,Percentage of the Grid Cell Occupied by Land,land_area_fraction,,,,,,CORE
+evspsblpot,POTEVP,kg m-2 s-1,a,Potential Evapotranspiration,water_potential_evaporation_flux,x,x,,,x,TIER 2
+wsgsmax,-999,m s-1,,Daily Maximum Near-Surface Wind Speed of Gust,wind_speed_of_gust ,x,x,,,,TIER 2
+clh,CLDFRA,%,a,High Level Cloud Fraction,cloud_area_fraction_in_atmosphere_layer,x,x,x,,,TIER 2
+clm,CLDFRA,%,a,Mid Level Cloud Fraction,cloud_area_fraction_in_atmosphere_layer,x,x,x,,,TIER 2
+cll,CLDFRA,%,a,Low Level Cloud Fraction,cloud_area_fraction_in_atmosphere_layer,x,x,x,,,TIER 2
+rsdscs,ACSWDNBC,W m-2,a,Surface Downwelling Clear-Sky Shortwave Radiation,surface_downwelling_shortwave_flux_in_air_assuming_clear_sky,x,x,x,,,TIER 2
+rldscs,ACLWDNBC,W m-2,a,Surface Downwelling Clear-Sky Longwave Radiation,surface_downwelling_longwave_flux_in_air_assuming_clear_sky,x,x,x,,,TIER 2
+rsuscs,ACSWUPBC,W m-2,a,Surface Upwelling Clear-Sky Shortwave Radiation,surface_upwelling_shortwave_flux_in_air_assuming_clear_sky,x,x,x,,,TIER 2
+rluscs,ACLWUPBC,W m-2,a,Surface Upwelling Clear-Sky Longwave Radiation,surface_upwelling_longwave_flux_in_air_assuming_clear_sky,x,x,x,,,TIER 2
+rsutcs,ACSWUPTC,W m-2,a,TOA Outgoing Clear-Sky Shortwave Radiation,toa_outgoing_shortwave_flux_assuming_clear_sky,x,x,x,,,TIER 2
+rlutcs,ACLWUPTC,W m-2,a,TOA Outgoing Clear-Sky Longwave Radiation,toa_outgoing_longwave_flux_assuming_clear_sky,x,x,x,,,TIER 2
+z0,ZNT,m,i,Surface Roughness Length,surface_roughness_length,x,x,,,,TIER 2
+cape,-999,J kg-1,i,Convective Available Potential Energy,atmosphere_convective_available_potential_energy_wrt_surface,x,x,,,x,TIER 2
+li,-999,K,i,Lifted Index,temperature_difference_between_ambient_air_and_air_lifted_adiabatically_from_the_surface,x,x,,,x,TIER 2
+cin,-999,J kg-1,i,Convective Inhibition,atmosphere_convective_inhibition_wrt_surface,x,x,,,x,TIER 2
+capemax,-999,J kg-1,,Daily Maximum Convective Available Potential Energy,atmosphere_convective_available_potential_energy_wrt_surface,x,x,,,,TIER 2
+limax,-999,K,,Daily Maximum Lifted Index,temperature_difference_between_ambient_air_and_air_lifted_adiabatically_from_the_surface,x,x,,,,TIER 2
+cinmax,-999,J kg-1,,Daily Maximum Convective Inhibition,atmosphere_convective_inhibition_wrt_surface,x,x,,,,TIER 2
+od550aer,AOD5502D,1,,Ambient Aerosol Optical Thickness at 550nm,atmosphere_optical_thickness_due_to_ambient_aerosol_particles,x,,,,,TIER2
+ua150,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+ua100,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+ua70,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+ua50,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+ua30,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+ua20,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+ua10,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+va150,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+va100,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+va70,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+va50,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+va30,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+va20,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+va10,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+ta150,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+ta100,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+ta70,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+ta50,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+ta30,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+ta20,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+ta10,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+hus150,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+hus100,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+hus70,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+hus50,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+hus30,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+hus20,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+hus10,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+zg150,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+zg100,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+zg70,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+zg50,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+zg30,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+zg20,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+zg10,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+wa150,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+wa100,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+wa70,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+wa50,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+wa30,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+wa20,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+wa10,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+ua750,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 2
+va750,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 2
+ta750,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 2
+hus750,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 2
+zg750,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 2
+wa750,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 2
+ua200m,-999,m s-1,i,Eastward Wind at 200m,eastward_wind,x,x,,,x,TIER 2
+ua250m,-999,m s-1,i,Eastward Wind at 250m,eastward_wind,x,x,,,x,TIER 2
+ua300m,-999,m s-1,i,Eastward Wind at 300m,eastward_wind,x,x,,,x,TIER 2
+va200m,-999,m s-1,i,Northward Wind at 200m,northward_wind,x,x,,,x,TIER 1
+va250m,-999,m s-1,i,Northward Wind at 250m,northward_wind,x,x,,,x,TIER 1
+va300m,-999,m s-1,i,Northward Wind at 300m,northward_wind,x,x,,,x,TIER 1
+sftgif,-999,%,,Percentage of the Grid Cell Covered by Glacier,land_ice_area_fraction,,,,,,TIER 2
+mrsofc,-999,kg m-2,,Capacity of Soil to Store Water  (Field Capacity),soil_moisture_content_at_field_capacity,,,,,,TIER 2
+rootd,-999,m,,Maximum Root Depth,root_depth,,,,,,TIER 2
+sftlaf,LAKEMASK,%,,Percentage of the Grid Cell Occupied by Lake,lake_area_fraction,,,,,,TIER 2
+sfturf,LU_INDEX,%,,Percentage of the Grid Cell Occupied by City,urban_area_fraction,,,,,,TIER 2
+dtb,-999,m,,Depth to Bedrock,bedrock_depth,,,,,,TIER 2
+areacella,-999,m2,,Atmosphere Grid-Cell Area,cell_area,,,,,,TIER2
+ts,TSK,K,i,Surface Temperature,surface_temperature,x,x,,,x,TIER 1
+tsl,TSLB,K,i,Temperature of Soil,soil_temperature,x,x,x,,x,TIER 1
+prc,RAINC,kg m-2 s-1,a,Convective Precipitation,convective_precipitation_flux,x,x,,,x,TIER 1
+prhmax,-999,kg m-2 s-1,,Daily Maximum Hourly Precipitation Rate,precipitation_flux,x,x,,,x,TIER 1
+prsn,SNOWNC,kg m-2 s-1,a,Snowfall Flux,snowfall_flux,x,x,,,x,TIER 1
+mrros,RUNSF,kg m-2 s-1,a,Surface Runoff,surface_runoff_flux,x,x,x,,x,TIER 1
+mrro,-999,kg m-2 s-1,a,Total Runoff,runoff_flux,x,x,x,,x,TIER 1
+snm,ACSNOWM,kg m-2 s-1,a,Surface Snow Melt,surface_snow_melt_flux,x,x,x,,x,TIER 1
+tauu,-999,Pa,a,Surface Downward Eastward Wind Stress,surface_downward_eastward_stress,x,x,,,x,TIER 1
+tauv,-999,Pa,a,Surface Downward Northward Wind Stress,surface_downward_northward_stress,x,x,,,x,TIER 1
+sfcWindmax,-999,m s-1,,Daily Maximum Near-Surface Wind Speed,wind_speed,x,x,,,,TIER 1
+sund,SWDOWN,s,,Daily Duration of Sunshine,duration_of_sunshine,x,x,,,,TIER 1
+rsdsdir,ACSWDNBC,W m-2,a,Surface Direct Downwelling Shortwave Radiation,surface_direct_downwelling_shortwave_flux_in_air,x,x,,,x,TIER1
+rsus,ACSWUPB,W m-2,a,Surface Upwelling Shortwave Radiation,surface_upwelling_shortwave_flux_in_air,x,x,,,x,TIER 1
+rlus,ACLWUPB,W m-2,a,Surface Upwelling Longwave Radiation,surface_upwelling_longwave_flux_in_air,x,x,,,x,TIER 1
+rlut,ACLWUPT,W m-2,a,TOA Outgoing Longwave Radiation,toa_outgoing_longwave_flux,x,x,,,x,TIER 1
+rsdt,ACSWDNT,W m-2,a,TOA Incident Shortwave Radiation,toa_incoming_shortwave_flux,x,x,,,x,TIER 1
+rsut,ACSWUPT,W m-2,a,TOA Outgoing Shortwave Radiation,toa_outgoing_shortwave_flux,x,x,,,x,TIER 1
+hfls,LH,W m-2,a,Surface Upward Latent Heat Flux,surface_upward_latent_heat_flux,x,x,,,x,TIER 1
+hfss,HFX,W m-2,a,Surface Upward Sensible Heat Flux,surface_upward_sensible_heat_flux,x,x,,,x,TIER 1
+hfso,GRDFLX,W m-2,a,Surface Downward Ground Heat Flux,surface_downward_ground_heat_flux,x,x,,,x,TIER 2
+mrfso,-999,kg m-2,i,Soil Frozen Water Content,soil_frozen_water_content,x,x,x,,,TIER 1
+mrfsos,-999,kg m-2,i,Frozen Water Content in Upper Portion of Soil Column,frozen_water_content_of_soil_layer,x,x,,,x,TIER 1
+mrsfl,-999,kg m-2,i,Frozen Water Content of Soil Layer,frozen_water_content_of_soil_layer,x,x,x,,,TIER 1
+mrso,SMOIS,kg m-2,i,Total Soil Moisture Content,mass_content_of_water_in_soil,x,x,x,,x,TIER 1
+mrsos,SMOIS,kg m-2,i,Moisture in Upper Portion of Soil Column,mass_content_of_water_in_soil_layer,x,x,,,x,TIER 1
+mrsol,SMOIS,kg m-2,i,Total Water Content of Soil Layer,mass_content_of_water_in_soil_layer,x,x,x,,x,TIER 1
+snw,SNOW,kg m-2,i,Surface Snow Amount,surface_snow_amount,x,x,x,,x,TIER 1
+snc,SNOWC,%,i,Snow Area Percentage,surface_snow_area_fraction,x,x,x,,x,TIER 1
+snd,SNOWH,m,i,Snow Depth,surface_snow_thickness,x,x,x,,x,TIER 1
+siconca,SEAICE,%,,Sea-Ice Area Percentage (Atmospheric Grid),sea_ice_area_fraction,x,x,,,,TIER 1
+zmla,PBLH,m,i,Height of Boundary Layer,atmosphere_boundary_layer_thickness,x,x,,,x,TIER 1
+prw,-999,kg m-2,i,Water Vapor Path,atmosphere_mass_content_of_water_vapor,x,x,,,x,TIER 1
+clwvi,-999,kg m-2,i,Condensed Water Path,atmosphere_mass_content_of_cloud_condensed_water,x,x,,,x,TIER 1
+clivi,-999,kg m-2,i,Ice Water Path,atmosphere_mass_content_of_cloud_ice,x,x,,,x,TIER 1
+clgvi,-999,kg m-2,i,Vertical integral of mass content of graupel,atmosphere_mass_content_of_graupel,x,x,,,x,TIER 1
+clhvi,-999,kg m-2,i,Vertical integral of mass content of hail,atmosphere_mass_content_of_hail,x,x,,,x,TIER 1
+ua1000,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua925,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua850,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua700,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua600,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua500,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua400,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua300,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua250,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+ua200,-999,m s-1,i,Eastward Wind,eastward_wind,x,x,x,,x,TIER 1
+va1000,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va925,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va850,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va700,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va600,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va500,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va400,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va300,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va250,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+va200,-999,m s-1,i,Northward Wind,northward_wind,x,x,x,,x,TIER 1
+ta1000,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta925,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta850,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta700,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta600,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta500,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta400,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta300,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta250,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+ta200,-999,K,i,Air Temperature,air_temperature,x,x,x,,x,TIER 1
+hus1000,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus925,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus850,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus700,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus600,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus500,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus400,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus300,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus250,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+hus200,-999,1,i,Specific Humidity,specific_humidity,x,x,x,,x,TIER 1
+zg1000,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg925,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg850,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg700,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg600,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg500,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg400,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg300,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg250,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+zg200,-999,m,i,Geopotential Height,geopotential_height,x,x,x,,x,TIER 1
+wa1000,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa925,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa850,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa700,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa600,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa500,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa400,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa300,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa250,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+wa200,-999,m s-1,i,Upward Air Velocity,upward_air_velocity,x,x,x,,x,TIER 1
+ua50m,-999,m s-1,i,Eastward Wind at 50m,eastward_wind,x,x,,,x,TIER 1
+ua100m,-999,m s-1,i,Eastward Wind at 100m,eastward_wind,x,x,,,x,TIER 1
+ua150m,-999,m s-1,i,Eastward Wind at 150m,eastward_wind,x,x,,,x,TIER 1
+va50m,-999,m s-1,i,Northward Wind at 50m,northward_wind,x,x,,,x,TIER 1
+va100m,-999,m s-1,i,Northward Wind at 100m,northward_wind,x,x,,,x,TIER 1
+va150m,-999,m s-1,i,Northward Wind at 150m,northward_wind,x,x,,,x,TIER 1
+ta50m,-999,K,i,Air Temperature at 50m,air_temperature,x,x,,,x,TIER 1
+hus50m,-999,1,i,Specific Humidity at 50m,specific_humidity,x,x,,,x,TIER 1
