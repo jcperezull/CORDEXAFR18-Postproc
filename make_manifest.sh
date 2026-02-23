@@ -82,7 +82,7 @@ rm -f "$notproc"
 tail -n +2 "$CSV_FILE" | while IFS=, eval "read $read_template"; do
   VARIABLE=$out_name
   FREQ_AGGREGATE=$frequency
-  FREQ=$FREQ_ORIG
+  FREQ=$FREQ_AGGREGATE
   
   # Process cell_method to extract aggregate information to cdo
 

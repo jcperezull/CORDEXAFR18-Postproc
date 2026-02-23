@@ -35,7 +35,7 @@ elif [[ ${PROJECT} == "EUROCORDEX" ]]; then
   export dir_data_in="set-full-path-to-raw-wrfoutput-files"
 elif [[ ${PROJECT} == "AFRCORDEX18" ]]; then
   #export dir_data_in="/disk/barbusano/barbusano1/WRF4G_monitor/CORDEX-AFR18_4611_256_p-198001-06_v1/results/CORDEX-AFR18_4611_256_p-198001-06_v1/output"
-  export dir_data_in="/home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/Software/pCMORIzer/Inputs/1979"
+  export dir_data_in="/home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/Software/pCMORIzer/Inputs/1980"
 else
   echo "Provide full path to you raw wrfout files."
 fi
