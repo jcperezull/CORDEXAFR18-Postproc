@@ -28,14 +28,29 @@ export DOM=$2
 export VARNAME=$3
 export PROJECT=$4
 export FREQ=$5
+export DIR_DATA_IN=$6   # Input directory: where wrfout and wrfpress reside
+export DIR_OUT_ROOT=$7  # Output directory: to replace DirOutputPostProRoot variable in namelist
 
-if [[ ${PROJECT} == "I4C" ]]; then
-  export dir_data_in="set-full-path-to-raw-wrfoutput-files"
-elif [[ ${PROJECT} == "EUROCORDEX" ]]; then
-  export dir_data_in="set-full-path-to-raw-wrfoutput-files"
-elif [[ ${PROJECT} == "AFRCORDEX18" ]]; then
-  #export dir_data_in="/disk/barbusano/barbusano1/WRF4G_monitor/CORDEX-AFR18_4611_256_p-198001-06_v1/results/CORDEX-AFR18_4611_256_p-198001-06_v1/output"
-  export dir_data_in="/home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/Software/pCMORIzer/Inputs/1980"
+# Directory checks
+# 1. Check argument
+if [[ -z "$DIR_OUT_ROOT" ]]; then
+    echo "Use: $0 YEAR DOM VARNAME PROJECT FREQ DIR_DATA_IN DIR_OUT_ROOT"
+    exit 1
+fi
+# 2. Check input directory
+if [[ ! -d "$DIR_DATA_IN" ]]; then
+    echo "ERROR: Input directory does not exist: $DIR_DATA_IN"
+    exit 1
+fi
+
+# 3. Creates output directory if not exist
+if [[ ! -d "$DIR_OUT_ROOT" ]]; then
+    echo "Creating output directory: $DIR_OUT_ROOT"
+    mkdir -p "$DIR_OUT_ROOT"
+fi
+
+if [[ ${PROJECT} == "AFRCORDEX18" ]]; then
+  dir_data_in="$DIR_DATA_IN"
 else
   echo "Provide full path to you raw wrfout files."
 fi
@@ -67,7 +82,6 @@ dir_home=$(pwd)
 dir_work=${dir_home}/${PROJECT}/${DOM}_${FREQ}/${YEAR}
 mkdir -p ${dir_work}; cd ${dir_work}
 ln -sf ${dir_data_in}/wrf*_${DOM}_${YEAR}* ${dir_work}/
-##JC ln -sf ${dir_data_in}/wrf*_${DOM}_${YEAR_next}-01-01* ${dir_work}/
 
 # Create working directory per variable
 mkdir -p ${dir_work}/${VARNAME}
@@ -75,7 +89,10 @@ cd ${dir_work}/${VARNAME}
 
 # Adapt general namelist for the seleted variabels
 cp -f ${dir_home}/runctrl.current.nml_template_${DOM}_${PROJECT} ${dir_work}/${VARNAME}/runctrl.current.nml_${DOM}
-sed -i "s/__YYYY__/$Y/g" runctrl.current.nml_${DOM}
+# Replace output directory in namelist
+# Changing field separator to | en case of /
+sed -i "s|DirOutputPostProRoot.*|DirOutputPostProRoot = '${DIR_OUT_ROOT}'|g" runctrl.current.nml_${DOM}
+sed -i "s/__YYYY__/$YEAR/g" runctrl.current.nml_${DOM}
 sed -i "s/__nvar__/$nvar/g" runctrl.current.nml_${DOM}
 ln -sf runctrl.current.nml_${DOM} runctrl.current.nml
 
@@ -85,17 +102,8 @@ cp -f ${dir_home}/CORDEX_CMIP6_variables.csv ${dir_work}/${VARNAME}/
 python generate_vars_namelist.py ${VARNAME}
 mv runctrl.vars.${VARNAME}.nml runctrl.vars.nml
 
-# Compile the code for the specific varlist
-# JC changed to copy the precompiled code to pCMORizer.exe 12/02/2026
+# Copy the compiled fortran90 file with the correspondign frequency
 
-##cp -f ${dir_home}/Makefile ${dir_work}/${VARNAME}/
-##cp -f ${dir_home}/pCMORizer.f90 ${dir_work}/${VARNAME}/pCMORizer.f90
-##sed -i "s/DO ifrq = 1, 1, 1/DO ifrq = $freq_id, $freq_id, 1/g" ${dir_work}/${VARNAME}/pCMORizer.f90
-##make veryclean
-##make
-##sleep 2
-##mv pCMORizer pCMORizer.exe
-##sleep 2
 cp -f ${dir_home}/pCMORizer_${FREQ} ${dir_work}/${VARNAME}/pCMORizer.exe
 
 # running the code

@@ -18,7 +18,7 @@
 #
 # Contact: milovacj@unican.es
 
-wrfpress_levels=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200]
+wrfpress_levels=[1000, 925, 850, 750, 700, 600, 500, 400, 300, 250, 200]
 
 def print_instructions():
     """Prints instructions."""

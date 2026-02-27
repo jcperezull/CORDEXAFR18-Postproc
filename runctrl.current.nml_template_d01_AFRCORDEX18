@@ -37,7 +37,7 @@
    nx = 541,                      	  	! domain_id raw output x-dim, incl. relaxation zone, unstaggered, changed to 359x350 w/ EUR-15
    ny = 560,                      	  	! domain_id raw output x-dim, incl. relaxation zone, umstaggered                    			  
    nz = 53, 		                  	! number of vertical levels, unstaggered
-   npl = 10,					! number of pressure levels in wrfpress file
+   npl = 11,					! number of pressure levels in wrfpress file
    xoffset = 10,                           	! zone to be cut away in x-dir. (e.g., boundary relax zone) spec_bdy_width
    yoffset = 10,                           	! many grps do not remove the boundary relaxation zone, in agreement with UCAN boundary relaxation zone is removed
    xfocus = 521,                          	! EUR-11 official grid x-dim, unknown from geo_em file, nx-2*xoffset
