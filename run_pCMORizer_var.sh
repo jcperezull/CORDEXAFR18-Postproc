@@ -74,8 +74,9 @@ case $FREQ in
 esac
 
 echo "Starting: $(date +%H:%M:%S)"
-
-echo "Changing in pCMORizer.f90 freq_id to $freq_id for the frequency $FREQ"
+echo "Node: ${SLURMD_NODENAME}"
+echo "Index: ${SLURM_ARRAY_TASK_ID}"
+#echo "Changing in pCMORizer.f90 freq_id to $freq_id for the frequency $FREQ"
 
 # Create working directory
 dir_home=$(pwd)

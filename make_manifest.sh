@@ -17,8 +17,8 @@ get_nml_quoted () {
 
 ###########
 
-if [ "$#" -lt 4 ]; then
-  echo "Usage: $0 <CSV_FILE> <YEAR> <DOMAIN> <PROJECT> [optional: FREQUENCY]"
+if [ "$#" -lt 5 ]; then
+  echo "Usage: $0 <CSV_FILE> <YEAR> <DOMAIN> <PROJECT> <OUTPUT DIRECTORY> [optional: FREQUENCY]"
   exit 1
 fi
 
@@ -26,7 +26,8 @@ CSV_FILE=$1
 YEAR=$2
 DOMAIN=$3
 PROJECT=$4
-FREQ_FILTER=${5:-}
+DIR_OUT=$5
+FREQ_FILTER=${6:-}
 
 TEMPLATE="runctrl.current.nml_template_${DOMAIN}_${PROJECT}"
 
@@ -50,7 +51,7 @@ source_id=$(get_nml_quoted "$TEMPLATE" "source_id")
 version_realization=$(get_nml_quoted "$TEMPLATE" "version_realization")
 VERSION=$(get_nml_quoted "$TEMPLATE" "version")
 
-BASEPATH="${DirOutputPostProRoot}/${project_id_nml}/${mip_era}/${activity_id}/${domain_id}/${institution_id}/${driving_source_id}/${driving_experiment_id}/${driving_variant_label}/${source_id}/${version_realization}"
+BASEPATH="${DIR_OUT}/${project_id_nml}/${mip_era}/${activity_id}/${domain_id}/${institution_id}/${driving_source_id}/${driving_experiment_id}/${driving_variant_label}/${source_id}/${version_realization}"
 ####
 
 # Si CSV_FILE es URL, descargar
