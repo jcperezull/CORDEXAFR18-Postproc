@@ -121,7 +121,7 @@ manifest="manifest_${PROJECT}_${YEAR}_${DOMAIN}.txt"
 
 # Call the function for testing (Dry-run is true by default)
 cleanup_unused_day_variables "$CSV_FILE" "$manifest" "false"
-exit 0
+#exit 0
 
 N=$(wc -l < "$manifest")
 
