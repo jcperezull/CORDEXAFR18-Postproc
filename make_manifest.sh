@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Function to read namelist template to generate Output path
-get_nml_quoted () {
+# ============================================================
+# make_manifest.sh
+#
+# Uso:
+#   ./make_manifest.sh <CSV_FILE> <YEAR> <DOMAIN> <PROJECT> <OUTPUT_DIRECTORY> [optional: FREQUENCY]
+#
+# Genera:
+#   manifest_<PROJECT>_<YEAR>_<DOMAIN>.txt
+#
+# Formato de cada línea:
+#   YEAR DOMAIN VARIABLE PROJECT FREQ FREQ_AGGREGATE METHOD DATAPATH
+# ============================================================
+
+# ---------- Helpers ----------
+
+get_nml_quoted() {
   local file="$1" key="$2"
   awk -v k="$key" '
     $0 ~ "^[[:space:]]*"k"[[:space:]]*=" {
@@ -15,10 +29,45 @@ get_nml_quoted () {
   ' "$file"
 }
 
-###########
+extract_time_method() {
+  # Extrae el valor tras "time:" del campo cell_methods
+  # Ejemplos:
+  #   "time: mean"     -> mean
+  #   "time: maximum"  -> maximum
+  #   ""               -> ""
+  local s="${1:-}"
+  awk '
+    {
+      m = match($0, /time:[[:space:]]*[^[:space:]]+/)
+      if (m) {
+        x = substr($0, RSTART, RLENGTH)
+        sub(/^time:[[:space:]]*/, "", x)
+        print x
+      }
+    }
+  ' <<< "$s"
+}
 
-if [ "$#" -lt 5 ]; then
-  echo "Usage: $0 <CSV_FILE> <YEAR> <DOMAIN> <PROJECT> <OUTPUT DIRECTORY> [optional: FREQUENCY]"
+map_method_to_cdo() {
+  local m="${1:-}"
+  case "$m" in
+    maximum) echo "max" ;;
+    minimum) echo "min" ;;
+    ""      ) echo "na"  ;;
+    *       ) echo "$m"  ;;
+  esac
+}
+
+csv_has_var_freq() {
+  local var="$1"
+  local freq="$2"
+  [[ -n "${CSV_INDEX[$var|$freq]:-}" ]]
+}
+
+# ---------- Argumentos ----------
+
+if [[ "$#" -lt 5 ]]; then
+  echo "Usage: $0 <CSV_FILE> <YEAR> <DOMAIN> <PROJECT> <OUTPUT_DIRECTORY> [optional: FREQUENCY]"
   exit 1
 fi
 
@@ -36,7 +85,7 @@ if [[ ! -f "$TEMPLATE" ]]; then
   exit 2
 fi
 
-##Build BasePath from template namelist file
+# ---------- Leer template ----------
 
 DirOutputPostProRoot=$(get_nml_quoted "$TEMPLATE" "DirOutputPostProRoot")
 project_id_nml=$(get_nml_quoted "$TEMPLATE" "project_id")
@@ -52,17 +101,20 @@ version_realization=$(get_nml_quoted "$TEMPLATE" "version_realization")
 VERSION=$(get_nml_quoted "$TEMPLATE" "version")
 
 BASEPATH="${DIR_OUT}/${project_id_nml}/${mip_era}/${activity_id}/${domain_id}/${institution_id}/${driving_source_id}/${driving_experiment_id}/${driving_variant_label}/${source_id}/${version_realization}"
-####
 
-# Si CSV_FILE es URL, descargar
-if [[ ${CSV_FILE:0:5} == "https" ]]; then
+# ---------- Descargar CSV si es URL ----------
+
+if [[ "${CSV_FILE:0:5}" == "https" ]]; then
   echo "Downloading the csv file: $CSV_FILE"
   wget -q "$CSV_FILE" -O data_request.csv
   CSV_FILE="data_request.csv"
 fi
 
-# Si filtras por frecuencia, crea sub-CSV
-if [[ -n "${FREQ_FILTER}" ]]; then
+# ---------- Filtrar por frecuencia si se pide ----------
+# OJO: esto mantiene solo filas cuya frecuencia coincide exactamente.
+# Si quieres construir manifest a partir de varias frecuencias relacionadas
+# (por ejemplo day dependiente de 1hr), es mejor NO filtrar.
+if [[ -n "$FREQ_FILTER" ]]; then
   echo "Creating sub-csv with frequency=${FREQ_FILTER}"
   outcsv="data_request_${PROJECT}_${FREQ_FILTER}.csv"
   head -n 1 "$CSV_FILE" > "$outcsv"
@@ -70,9 +122,63 @@ if [[ -n "${FREQ_FILTER}" ]]; then
   CSV_FILE="$outcsv"
 fi
 
-# Leer cabecera para mapear columnas -> variables en bash
+if [[ ! -s "$CSV_FILE" ]]; then
+  echo "ERROR: CSV file is empty or missing: $CSV_FILE"
+  exit 3
+fi
+
+# ---------- Mapear columnas por nombre ----------
 IFS=',' read -r -a headers < <(head -n 1 "$CSV_FILE")
-read_template=$(printf ' %s' "${headers[@]}")
+
+declare -A COL
+for i in "${!headers[@]}"; do
+  h="${headers[$i]}"
+  h="${h//$'\r'/}"
+  COL["$h"]=$i
+done
+
+required_cols=(out_name frequency cell_methods)
+for c in "${required_cols[@]}"; do
+  if [[ -z "${COL[$c]:-}" && "${COL[$c]:-0}" != "0" ]]; then
+    echo "ERROR: Required column '$c' not found in CSV header"
+    exit 4
+  fi
+done
+
+idx_out_name=${COL[out_name]}
+idx_frequency=${COL[frequency]}
+idx_cell_methods=${COL[cell_methods]}
+
+# ---------- Precargar índice variable|freq -> cell_methods ----------
+declare -A CSV_INDEX
+declare -a CSV_LINES
+
+line_no=0
+while IFS= read -r line; do
+  ((line_no++)) || true
+
+  # Saltar cabecera
+  if [[ "$line_no" -eq 1 ]]; then
+    continue
+  fi
+
+  [[ -z "${line//[[:space:]]/}" ]] && continue
+
+  IFS=',' read -r -a row <<< "$line"
+
+  out_name="${row[$idx_out_name]:-}"
+  frequency="${row[$idx_frequency]:-}"
+  cell_methods="${row[$idx_cell_methods]:-}"
+
+  out_name="${out_name//$'\r'/}"
+  frequency="${frequency//$'\r'/}"
+  cell_methods="${cell_methods//$'\r'/}"
+
+  [[ -z "$out_name" || -z "$frequency" ]] && continue
+
+  CSV_INDEX["$out_name|$frequency"]="$cell_methods"
+  CSV_LINES+=("$line")
+done < "$CSV_FILE"
 
 manifest="manifest_${PROJECT}_${YEAR}_${DOMAIN}.txt"
 : > "$manifest"
@@ -80,82 +186,97 @@ manifest="manifest_${PROJECT}_${YEAR}_${DOMAIN}.txt"
 notproc="variables_not_processed_${PROJECT}.txt"
 rm -f "$notproc"
 
-tail -n +2 "$CSV_FILE" | while IFS=, eval "read $read_template"; do
-  VARIABLE=$out_name
-  FREQ_AGGREGATE=$frequency
-  FREQ=$FREQ_AGGREGATE
-  
-  # Process cell_method to extract aggregate information to cdo
+# ---------- Bucle principal ----------
+for line in "${CSV_LINES[@]}"; do
+  IFS=',' read -r -a row <<< "$line"
 
-#  cell_method=$(grep "time:" <<< "$cell_methods" | awk -F"time: " '{print $2}' | awk '{print $1}')
+  VARIABLE="${row[$idx_out_name]:-}"
+  FREQ_RAW="${row[$idx_frequency]:-}"
+  CELL_METHODS_RAW="${row[$idx_cell_methods]:-}"
 
-  # Extraer cell_method (puede no existir "time:" -> entonces queda vacío)
-  cell_method=$(awk '
-    {
-      m = match($0, /time:[[:space:]]*[^[:space:]]+/)
-      if (m) {
-        s = substr($0, RSTART, RLENGTH)
-        sub(/^time:[[:space:]]*/, "", s)
-        print s
-      }
-    }
-  ' <<< "${cell_methods:-}" )
+  VARIABLE="${VARIABLE//$'\r'/}"
+  FREQ_RAW="${FREQ_RAW//$'\r'/}"
+  CELL_METHODS_RAW="${CELL_METHODS_RAW//$'\r'/}"
 
-# Mapear a CDO
-  if [[ "$cell_method" == "maximum" ]]; then
-    METHOD="max"
-  elif [[ "$cell_method" == "minimum" ]]; then
-    METHOD="min"
-  elif [[ -n "$cell_method" ]]; then
-    METHOD="$cell_method"
-  else
-    METHOD="na"   # o "" si prefieres vacío
-  fi
+  # ---- Comprobaciones que quieres conservar ----
 
-  # 1 hour variables that have to be day  aggregated
-
-  if { [ "$FREQ" == "1hr" ] || [ "$FREQ" = "6hr" ]; }  && grep -q "${VARIABLE},day" "$CSV_FILE"; then
-    FREQ_AGGREGATE="day"
-  fi
-
-  # Frequency update-- Converts to 1hr frq day and monthly variables to aggregate later
-  if [ "$FREQ" == "day" ] && ! grep -q "$VARIABLE,1hr" "$CSV_FILE"; then
-    FREQ="1hr"
-  elif [ "$FREQ" == "mon" ] && ! grep -q "$VARIABLE,day" "$CSV_FILE"; then
-    FREQ="1hr"
-  fi
-
-
-
-  # Reglas de “procesable”
-  if [[ "${VARIABLE}" == "evspsblpot" ]] && grep -q "${VARIABLE},-999" CORDEX_CMIP6_variables.csv; then
-    echo "${VARIABLE} not available in the current version of pCMORzier" >> "$notproc"
+  if [[ "$VARIABLE" == "evspsblpot" ]] && grep -q "^${VARIABLE},-999" CORDEX_CMIP6_variables.csv; then
+    echo "${VARIABLE} not available in the current version of pCMORizer" >> "$notproc"
     continue
   fi
 
-  if [[ "${VARIABLE}" == "tasmin" || "${VARIABLE}" == "tasmax" ]]; then
+  if [[ "$VARIABLE" == "tasmin" || "$VARIABLE" == "tasmax" ]]; then
     echo "${VARIABLE} for 1hr not needed. Daily values will be extracted from tas." >> "$notproc"
     continue
   fi
 
-  if ! grep -q "${VARIABLE}" CORDEX_CMIP6_variables.csv; then
+  if ! grep -q "^${VARIABLE}," CORDEX_CMIP6_variables.csv; then
     echo "Warning: Variable $VARIABLE not found in Fortran 90 file. Skipping..." >> "$notproc"
     echo "$VARIABLE" >> "$notproc"
     continue
   fi
 
-  # Saltar mon/day si no está implementado (como tu script)
-  if [[ "$FREQ" == "mon" || "$FREQ" == "day" ]]; then
-    continue
-  fi
+  # ---- Reglas nuevas de normalización freq/aggregate/method ----
+
+  FREQ=""
+  FREQ_AGGREGATE=""
+  METHOD="na"
+
+  case "$FREQ_RAW" in
+    1hr)
+      FREQ="1hr"
+
+      if csv_has_var_freq "$VARIABLE" "day"; then
+        FREQ_AGGREGATE="day"
+        day_cell_methods="${CSV_INDEX[$VARIABLE|day]}"
+        day_time_method="$(extract_time_method "$day_cell_methods")"
+        METHOD="$(map_method_to_cdo "$day_time_method")"
+      else
+        FREQ_AGGREGATE="1hr"
+        own_time_method="$(extract_time_method "$CELL_METHODS_RAW")"
+        METHOD="$(map_method_to_cdo "$own_time_method")"
+      fi
+      ;;
+    6hr)
+      FREQ="6hr"
+      FREQ_AGGREGATE="6hr"
+      METHOD="na"
+      ;;
+    day)
+      # Si ya existe 1hr para esa variable, se procesará desde la fila 1hr.
+      # Saltamos esta para evitar duplicar tareas.
+      if csv_has_var_freq "$VARIABLE" "1hr"; then
+        continue
+      fi
+
+      FREQ="1hr"
+      FREQ_AGGREGATE="day"
+      day_time_method="$(extract_time_method "$CELL_METHODS_RAW")"
+      METHOD="$(map_method_to_cdo "$day_time_method")"
+      ;;
+    mon)
+      continue
+      ;;
+    fx)
+      FREQ="fx"
+      FREQ_AGGREGATE="fx"
+      METHOD="na"
+      ;;
+    *)
+      # Para cualquier otra frecuencia no contemplada explícitamente:
+      # se conserva freq=freq_raw y se intenta leer el método de su propia fila.
+      FREQ="$FREQ_RAW"
+      FREQ_AGGREGATE="$FREQ_RAW"
+      own_time_method="$(extract_time_method "$CELL_METHODS_RAW")"
+      METHOD="$(map_method_to_cdo "$own_time_method")"
+      ;;
+  esac
 
   DATAPATH="${BASEPATH}/${FREQ}/${VARIABLE}/${VERSION}"
 
-
-  # ✅ En vez de sbatch: añadimos una tarea al manifest
   echo "$YEAR $DOMAIN $VARIABLE $PROJECT $FREQ $FREQ_AGGREGATE $METHOD $DATAPATH" >> "$manifest"
 done
 
 echo "Manifest created: $manifest"
 echo "Tasks: $(wc -l < "$manifest")"
-
+[[ -f "$notproc" ]] && echo "Warnings written to: $notproc"

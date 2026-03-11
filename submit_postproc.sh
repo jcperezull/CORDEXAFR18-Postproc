@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 # --- FUNCTION DEFINITION ---
 
 cleanup_unused_day_variables() {
@@ -119,9 +118,6 @@ START_TIME=$(date +%s)
 
 manifest="manifest_${PROJECT}_${YEAR}_${DOMAIN}.txt"
 
-# Call the function for testing (Dry-run is true by default)
-cleanup_unused_day_variables "$CSV_FILE" "$manifest" "false"
-exit 0
 
 N=$(wc -l < "$manifest")
 
@@ -132,26 +128,49 @@ fi
 
 
 # 2) lanzar array: 1 core por tarea
-ARRAY_JOBID=$(sbatch --parsable --wait \
+#ARRAY_JOBID=$(sbatch --parsable --wait \
+#  --job-name="pCMOR_${PROJECT}_${YEAR}_${DOMAIN}" \
+#  --array=1-"$N" \
+#  --ntasks=1 \
+#  --partition="batch" \
+#  --cpus-per-task=1 \
+#  --exclude="node1501-4,node0315-3,node0312-[1,4],node0301-[1,3],node0302-3" \
+#  --output="logs/%x_%A_%a.out" \
+#  --error="logs/%x_%A_%a.err" \
+#  run_array_task.sh "$manifest" "$DIR_IN" "$DIR_OUT")
+
+
+ARRAY_JOBID=$(sbatch --parsable \
   --job-name="pCMOR_${PROJECT}_${YEAR}_${DOMAIN}" \
   --array=1-"$N" \
   --ntasks=1 \
   --partition="batch" \
   --cpus-per-task=1 \
+  --exclude="node1501-4,node0315-3,node0312-[1,4],node0301-[1,3],node0302-3" \
   --output="logs/%x_%A_%a.out" \
   --error="logs/%x_%A_%a.err" \
   run_array_task.sh "$manifest" "$DIR_IN" "$DIR_OUT")
 
-echo "Submitted array job: $ARRAY_JOBID with $N tasks"
-END_TIME=$(date +%s)
-TOTAL_SECONDS=$((END_TIME - START_TIME))
-echo "---------------------------------"
-echo "ARRAY JOB $ARRAY_JOBID FINISHED"
-echo "TOTAL EXECUTION TIME:"
-echo "$(date -u -d @$TOTAL_SECONDS +%T)"
-echo "---------------------------------"
+sbatch \
+  --dependency=afterany:$ARRAY_JOBID \
+  --job-name="pCMOR_finalize_${PROJECT}_${YEAR}_${DOMAIN}" \
+  --output="logs/finalize_%j.out" \
+  --error="logs/finalize_%j.err" \
+  delete_temp_files.sh "$CSV_FILE" "$manifest" "false" "$ARRAY_JOBID"
 
-
+#echo "Submitted array job: $ARRAY_JOBID with $N tasks"
+#END_TIME=$(date +%s)
+#TOTAL_SECONDS=$((END_TIME - START_TIME))
+#echo "---------------------------------"
+#echo "ARRAY JOB $ARRAY_JOBID FINISHED"
+#echo "TOTAL EXECUTION TIME:"
+#echo "$(date -u -d @$TOTAL_SECONDS +%T)"
+#echo "---------------------------------"
+#
+# Call the function for testing (Dry-run is true by default)
+#cleanup_unused_day_variables "$CSV_FILE" "$manifest" "false"
+#exit 0
+#
 
 # 3) lanzar post-proceso cuando TODAS terminen OK
 #POST_JOBID=$(sbatch --parsable \
