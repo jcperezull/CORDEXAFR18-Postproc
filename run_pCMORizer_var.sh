@@ -100,6 +100,8 @@ ln -sf runctrl.current.nml_${DOM} runctrl.current.nml
 # Generate namelist for the selected variables
 cp -f ${dir_home}/generate_vars_namelist.py ${dir_work}/${VARNAME}/
 cp -f ${dir_home}/CORDEX_CMIP6_variables.csv ${dir_work}/${VARNAME}/
+cp ${dir_home}/VERSION.txt ${dir_work}/${VARNAME}/
+
 python generate_vars_namelist.py ${VARNAME}
 mv runctrl.vars.${VARNAME}.nml runctrl.vars.nml
 
