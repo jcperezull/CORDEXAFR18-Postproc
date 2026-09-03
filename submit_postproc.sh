@@ -64,7 +64,6 @@ ARRAY_JOBID=$(sbatch --parsable \
   --ntasks=1 \
   --partition="batch" \
   --cpus-per-task=1 \
-  #--exclude="node1501-4,node0315-3,node0312-[1,4],node0301-[1,3],node0302-3" \
   --output="logs/%x_%A_%a.out" \
   --error="logs/%x_%A_%a.err" \
   run_array_task.sh "$manifest" "$DIR_IN" "$DIR_OUT")
