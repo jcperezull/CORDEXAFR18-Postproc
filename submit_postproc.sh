@@ -58,21 +58,65 @@ if [[ "$N" -le 0 ]]; then
 fi
 
 
-ARRAY_JOBID=$(sbatch --parsable \
-  --job-name="pCMOR_${PROJECT}_${YEAR}_${DOMAIN}" \
-  --array=1-"$N" \
-  --ntasks=1 \
-  --partition="batch" \
-  --cpus-per-task=1 \
-  --exclude="node1501-4,node0315-3,node0312-[1,4],node0301-[1,3],node0302-3" \
-  --output="logs/%x_%A_%a.out" \
-  --error="logs/%x_%A_%a.err" \
-  run_array_task.sh "$manifest" "$DIR_IN" "$DIR_OUT")
+set -euo pipefail
 
-sbatch \
-  --dependency=afterany:$ARRAY_JOBID \
-  --job-name="pCMOR_finalize_${PROJECT}_${YEAR}_${DOMAIN}" \
-  --output="logs/finalize_%j.out" \
-  --error="logs/finalize_%j.err" \
-  delete_temp_files.sh "$CSV_FILE" "$manifest" "false" "$ARRAY_JOBID"
+mkdir -p logs
 
+# Máximo de procesos simultáneos.
+# Ajusta según núcleos disponibles.
+MAX_PARALLEL="${MAX_PARALLEL:-4}"
+
+# Identificador local para agrupar la ejecución
+ARRAY_JOBID="local_$(date +%Y%m%d_%H%M%S)_$$"
+
+# Fichero para guardar pids y estados
+PID_FILE="logs/${ARRAY_JOBID}.pids"
+STATUS_FILE="logs/${ARRAY_JOBID}.status"
+: > "$PID_FILE"
+: > "$STATUS_FILE"
+
+launch_task() {
+  local task_id="$1"
+  local out="logs/pCMOR_${PROJECT}_${YEAR}_${DOMAIN}_${ARRAY_JOBID}_${task_id}.out"
+  local err="logs/pCMOR_${PROJECT}_${YEAR}_${DOMAIN}_${ARRAY_JOBID}_${task_id}.err"
+
+  (
+    export ARRAY_TASK_ID="$task_id"
+    bash run_array_task.sh "$manifest" "$DIR_IN" "$DIR_OUT"
+  ) >"$out" 2>"$err" &
+
+  local pid=$!
+  echo "${task_id},${pid}" >> "$PID_FILE"
+}
+
+# Cuenta procesos activos de este script
+num_running() {
+  jobs -rp | wc -l
+}
+
+# Lanza las N tareas con control de concurrencia
+for ((i=1; i<=N; i++)); do
+  while (( $(num_running) >= MAX_PARALLEL )); do
+    sleep 1
+  done
+  launch_task "$i"
+done
+
+# Espera a todos los procesos y guarda estado
+FAIL_COUNT=0
+
+while IFS=, read -r task_id pid; do
+  if wait "$pid"; then
+    echo "${task_id},0" >> "$STATUS_FILE"
+  else
+    rc=$?
+    echo "${task_id},${rc}" >> "$STATUS_FILE"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  fi
+done < "$PID_FILE"
+
+echo "ARRAY_JOBID=$ARRAY_JOBID"
+echo "FAIL_COUNT=$FAIL_COUNT"
+
+# Equivalente a afterany: se ejecuta siempre cuando terminen todas
+bash delete_temp_files.sh "$CSV_FILE" "$manifest" "false" "$ARRAY_JOBID"
