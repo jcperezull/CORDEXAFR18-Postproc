@@ -1,3 +1,27 @@
 AFRCORDEX18
 logs
 variables_not_processed_AFRCORDEX18.txt
+CheckQualityCordex
+Check_reports
+*.png
+*.log
+*.txt
+data-request_fixpCMOR.csv
+data-request_fixplev.csv
+data-request_small.csv
+filelisthandling.mod
+geo_em.d01.nc
+informe*.txt
+modify_institution.py
+namelisthandling.mod
+pCMORizer
+pCMORizer_1hr_beforebug
+pCMORizer_6hr_beforebug
+pCMORizer_day_beforebug
+pCMORizer_fixua
+pCMORizer_fixua.f90
+pCMORizer_fx_beforebug
+reftimevecs.mod
+scripts
+show_top5_pcmorizer.sh
+source ~/
