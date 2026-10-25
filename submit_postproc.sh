@@ -17,6 +17,8 @@ DIR_IN=$5    # Input directory (wrfout and wrfpress files)
 DIR_OUT=$6   # Output directory (where pCMORizer.exe builds output tree)
 FREQ_FILTER=${7:-} # Output frequency (optional)
 
+source /disk/tilo/tilo0/WRF4G/WRF4Gversions/WRFV4.6.1.1/load_dist_intel.sh
+
 # 1. Validación básica de presencia de argumentos
 if [[ -z "$DIR_OUT" ]]; then
     echo "Use: $0 CSV_FILE YEAR DOMAIN PROJECT DIR_IN DIR_OUT [FREQ_FILTER]"
@@ -58,13 +60,10 @@ if [[ "$N" -le 0 ]]; then
 fi
 
 
-set -euo pipefail
-
-mkdir -p logs
 
 # Máximo de procesos simultáneos.
 # Ajusta según núcleos disponibles.
-MAX_PARALLEL="${MAX_PARALLEL:-4}"
+MAX_PARALLEL="${MAX_PARALLEL:-128}"
 
 # Identificador local para agrupar la ejecución
 ARRAY_JOBID="local_$(date +%Y%m%d_%H%M%S)_$$"

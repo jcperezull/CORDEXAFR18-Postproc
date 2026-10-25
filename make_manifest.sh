@@ -29,20 +29,38 @@ get_nml_quoted() {
   ' "$file"
 }
 
+# extract_time_method() {
+#   # Extrae el valor tras "time:" del campo cell_methods
+#   # Ejemplos:
+#   #   "time: mean"     -> mean
+#   #   "time: maximum"  -> maximum
+#   #   ""               -> ""
+#   local s="${1:-}"
+#   awk '
+#     {
+#       m = match($0, /time:[[:space:]]*[^[:space:]]+/)
+#       if (m) {
+#         x = substr($0, RSTART, RLENGTH)
+#         sub(/^time:[[:space:]]*/, "", x)
+#         print x
+#       }
+#     }
+#   ' <<< "$s"
+# }
 extract_time_method() {
-  # Extrae el valor tras "time:" del campo cell_methods
-  # Ejemplos:
-  #   "time: mean"     -> mean
-  #   "time: maximum"  -> maximum
-  #   ""               -> ""
   local s="${1:-}"
-  awk '
+  # Usamos gawk con FPAT para definir qué es una columna (ignora comas dentro de comillas)
+  # Luego buscamos "time:" solo en la parte final de la línea
+  gawk '
+    BEGIN {
+      FPAT = "([^,]+)|(\"[^\"]+\")" 
+    }
     {
-      m = match($0, /time:[[:space:]]*[^[:space:]]+/)
-      if (m) {
-        x = substr($0, RSTART, RLENGTH)
-        sub(/^time:[[:space:]]*/, "", x)
-        print x
+      # Buscamos en toda la línea, pero priorizamos el patrón de cell_methods
+      # que suele estar hacia el final.
+      if (match($0, /time:[[:space:]]*([^,[:space:]]+)/, arr)) {
+        # arr[1] contiene lo que hay después de "time: " hasta el primer espacio o coma
+        print arr[1]
       }
     }
   ' <<< "$s"
@@ -255,8 +273,24 @@ for line in "${CSV_LINES[@]}"; do
       METHOD="$(map_method_to_cdo "$day_time_method")"
       ;;
     mon)
+    ## Modified on October 22nd to account for AOD monthly variable. 
+      
+      # Si la variable aparece también con otra frecuencia, la mensual
+      # se obtendrá a partir de esa otra frecuencia y no hace falta
+      # crear una tarea específica aquí.
+    if csv_has_var_freq "$VARIABLE" "day" || \
+      csv_has_var_freq "$VARIABLE" "1hr" || \
+      csv_has_var_freq "$VARIABLE" "6hr"; then
       continue
-      ;;
+    fi
+
+    # Si solo existe a frecuencia mensual, se procesará partiendo de 1hr
+    # y agregando a diario mediante media.
+    FREQ="1hr"
+    FREQ_AGGREGATE="day"
+    METHOD="mean"
+    ;;
+    
     fx)
       FREQ="fx"
       FREQ_AGGREGATE="fx"
@@ -279,4 +313,6 @@ done
 
 echo "Manifest created: $manifest"
 echo "Tasks: $(wc -l < "$manifest")"
+
 [[ -f "$notproc" ]] && echo "Warnings written to: $notproc"
+echo "launching tasks..."

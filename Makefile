@@ -1,5 +1,5 @@
-EBROOTNETCDFMINFORTRAN=/home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/Software/NetCDF
-EBROOTNETCDF=/home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/Software/NetCDF
+EBROOTNETCDFMINFORTRAN=/home/pierresimt/CORDEX/dist/intel/lib/
+EBROOTNETCDF=/home/pierresimt/CORDEX/dist/intel/lib/
 # gfortran flags (uncomment if using gfortran)
 #FC = gfortran
 #FCFLAGS = -O2 -cpp -DSERIAL
@@ -9,7 +9,7 @@ EBROOTNETCDF=/home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetc
 
 # intel flags (comment out if not using intel compiler)
 #FC = mpiifort
-FC = ifx
+FC = ifort
 FCFLAGS = -O2 -assume realloc_lhs -cpp -DSERIAL
 FCFLAGS += -fp-model precise -prec-div 
 
@@ -18,6 +18,7 @@ FCFLAGS += -I$(EBROOTNETCDFMINFORTRAN)/include -I$(EBROOTNETCDF)/include
 LDFLAGS = -L$(EBROOTNETCDFMINFORTRAN)/lib -lnetcdff -L${EBROOTNETCDF}/lib -lnetcdf
 
 PROGRAMS = pCMORizer
+#PROGRAMS = pCMORizer_fixua
 
 all: $(PROGRAMS)
 

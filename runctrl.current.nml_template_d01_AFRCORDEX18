@@ -2,24 +2,25 @@
    activity_id = "DD",
    contact = "gotaull@ull.edu.es",
    Conventions = "CF-1.11",
-   domain_id = "AFR-18f",	
-   att_domain = "Europe extended. Full computational domain including relaxation zones (10 gridpoints)",
+   domain_id = "AFR-18",	
+   domain = "Africa",
    driving_experiment_id = "evaluation",
-   driving_experiment = "ERA5, evaluation, r1i1p1",
+   driving_experiment = "reanalysis simulation of the recent past",
    driving_institution_id = "ECMWF",
-   driving_source_id = "ECMWF-ERA5",
+   driving_source_id = "ERA5",
    driving_variant_label = "r1i1p1f1",   
-   grid = "Rotated-pole latitude-longitude with 0.16 degree grid spacing", 	
-   institution = "BCCR [Bjerknes Center for Climate Research (BCCR), NORCE Norwegian Research Center, Bergen, Norway]; UCAN [Instituto de Fisica de Cantabria (IFCA), CSIC-Universidad de Cantabria, Santander, Spain]",
+   grid = "Regular latitude-longitude grid with 0.16 degree grid spacing", 	
+   institution = "Universidad de La Laguna, La Laguna (Canary Islands), Spain",
    institution_id = "ULL", 
    license = "https://cordex.org/data-access/cordex-cmip6-data/cordex-cmip6-terms-of-use",
    mip_era = "CMIP6",
    product = "model-output",  
-   project_id = "CORDEX",
-   source = "Weather Research and Forecasting model version 4.6.1.1, CORDEX WRF Community configuration Q",
-   source_id = "WRF4611Q",
+   project_id = "CORDEX-CMIP6",
+   source = "Weather Research and Forecasting model version 4.6.1, CORDEX WRF Community configuration U",
+   source_id = "WRF461U",
    source_type = "ARCM",
    version = "v20240806",
+   title = "CORDEX-CMIP6 regional climate simulation over Africa"
    version_realization = "v1-r1",
    references = "https://cordex.org/experiment-guidelines/cordex-cmip6/",
    comment = "These are results of 1-nest approach, ERA-5 driven (directly downscaled) simulation for AFR-16 domain.The simulations were carried out on the TeideHPC nodes of the supercomputing centre at the Instituto de Energias Renovables de Tenerife (ITER).",
@@ -46,8 +47,8 @@
    tetot = '2101-01-01_00:00:00',         	! end of the main time vector, do not change
 /
 &static_fields
-   PnFnGeo = '/home/jcperez/data/WRF4G_rocky/repository/domains/CORDEXAFR-18/geo_em.d01.nc',
-   projection = 'ROT', !'LCC'
+   PnFnGeo = '/disk/barbusano/barbusano2/Projects/AFR-CORDEX/Utils/Postproc/CORDEXAFR18-Postproc/geo_em.d01.nc',
+   projection = 'ROT', !'LCC'   
 /
 &tool_config
    nvar = 1,

@@ -18,8 +18,8 @@
 
 
 # Set the enviroment
-source /home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/envvars.sh
-module load Python/3.10.8-GCCcore-12.2.0
+#source /home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/envvars.sh
+#module load Python/3.10.8-GCCcore-12.2.0
 
 # Adjust to your situations
 export YEAR=$1 	
@@ -74,8 +74,8 @@ case $FREQ in
 esac
 
 echo "Starting: $(date +%H:%M:%S)"
-echo "Node: ${SLURMD_NODENAME}"
-echo "Index: ${SLURM_ARRAY_TASK_ID}"
+#echo "Node: ${SLURMD_NODENAME}"
+#echo "Index: ${SLURM_ARRAY_TASK_ID}"
 #echo "Changing in pCMORizer.f90 freq_id to $freq_id for the frequency $FREQ"
 
 # Create working directory
@@ -100,6 +100,8 @@ ln -sf runctrl.current.nml_${DOM} runctrl.current.nml
 # Generate namelist for the selected variables
 cp -f ${dir_home}/generate_vars_namelist.py ${dir_work}/${VARNAME}/
 cp -f ${dir_home}/CORDEX_CMIP6_variables.csv ${dir_work}/${VARNAME}/
+cp ${dir_home}/VERSION.txt ${dir_work}/${VARNAME}/
+echo $VARNAME
 python generate_vars_namelist.py ${VARNAME}
 mv runctrl.vars.${VARNAME}.nml runctrl.vars.nml
 

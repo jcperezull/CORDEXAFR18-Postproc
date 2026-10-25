@@ -10,9 +10,20 @@ manifest="$1"
 DIR_IN="$2"
 OUT_DIR="$3"
 
-line=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$manifest")
+
+: "${ARRAY_TASK_ID:?ARRAY_TASK_ID no definida}"
+
+TASK_ID="$ARRAY_TASK_ID"
+
+
+# Si antes hacías algo así:
+# LINE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$manifest")
+# ahora:
+line=$(sed -n "${TASK_ID}p" "$manifest")
+
+#line=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$manifest")
 if [[ -z "${line}" ]]; then
-  echo "No line for SLURM_ARRAY_TASK_ID=${SLURM_ARRAY_TASK_ID}"
+  echo "No line for TASK_ID=${TASK_ID}"
   exit 2
 fi
 

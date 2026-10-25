@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-source /home/jcperez/data/Projects/CORDEXAfr/Teide/WRFintelteide/WRF_pnetcdf/WRF_4.6.1/Intel2024/envvars.sh
+module purge
+source /disk/tilo/tilo0/WRF4G/WRF4Gversions/WRFV4.6.1.1/load_dist_gnu.sh
+export PATH=/home_local/jcperez/WRF4G/WRF4Gversions/WRFV4.6.1.1/WRF4Gpack/bin/:$PATH
 
 # Use: <DATAPATH> <YEAR> <VARNAME> <METHOD>
 if [[ "$#" -lt 4 ]]; then
